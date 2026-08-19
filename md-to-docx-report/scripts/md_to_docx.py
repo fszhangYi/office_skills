@@ -24,6 +24,7 @@ Default format rules (docx 格式要求.txt):
   16. 「…」→“… ”
   17. LaTeX 公式转为 Word 公式（OMML）
   18. 代码块整段黑底白字
+  19. 适合流程图的内容：先 Mermaid→PNG（见 mermaid_to_png.py），再按 §15 嵌入
 
 版式样例：STAGE3.docx（Heading 1–4、居中图注、真超链接）。
 """
