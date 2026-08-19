@@ -13,14 +13,15 @@ Default format rules (docx 格式要求.txt):
   5. 表格适应窗口
   6. 行距 1.5
   7. 页码底部居中，五号
-  8. 插图用地址代替（不嵌入）
+  8. 插图用地址代替（仍写【插图地址】行）
   9. 自动生成目录（TOC 域）
   10. 标题使用 Heading 样式以便进入目录
   11. 表格和图片前后各 0.5 行间隔
   12. 图及图名称居中
   13. [文字](url) → Word 超链接
   14. 超链接文字 RGB(0,102,204)，宋体/Times New Roman，字号与上下文一致
-  15. 插图地址编号为 assets/N.filename（只改显示路径）
+  15. 插图地址编号为 assets/N.filename；并尝试嵌入缩放图片
+  16. 「…」→“… ”
 
 版式样例：STAGE3.docx（Heading 1–4、居中图注、真超链接）。
 """
@@ -48,6 +49,9 @@ NARROW_CM = 1.27
 HALF_LINE = Pt(9)
 # docx 格式要求.txt §14：RGB(0,102,204)
 LINK_BLUE = "0066CC"
+# 嵌入图默认最大宽（窄页边距下可用宽约 18cm，取 14cm 留白）
+IMG_MAX_WIDTH = Cm(14)
+IMG_MAX_HEIGHT = Cm(18)
 
 LINK_RE = re.compile(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)")
 INLINE_RE = re.compile(r"(\*\*.+?\*\*|`.+?`|\\\(.+?\\\))")
@@ -55,17 +59,41 @@ CAPTION_RE = re.compile(r"^\*?(图[：:].+|示意[：:].+)\*?$")
 MD_IMG_RE = re.compile(r"^!\[([^\]]*)\]\(([^)]+)\)")
 
 
-class ImageIndex:
-    """Assign sequential assets/N.filename display paths (docx only)."""
+def normalize_quotes(text: str) -> str:
+    """docx 格式要求 §16：强调引号「…」→中文弯引号 “… ”。"""
+    return text.replace("「", "“").replace("」", "”")
 
-    def __init__(self):
+
+class ImageIndex:
+    """Assign sequential assets/N.filename display paths; resolve disk files."""
+
+    def __init__(self, md_dir: Path | None = None):
         self.n = 0
+        self.md_dir = Path(md_dir) if md_dir else Path.cwd()
 
     def numbered(self, src: str) -> str:
         name = Path(str(src).replace("\\", "/")).name
         name = re.sub(r"^\d+\.", "", name)
         self.n += 1
         return f"assets/{self.n}.{name}"
+
+    def resolve(self, src: str) -> Path | None:
+        """Locate image on disk relative to the Markdown file."""
+        raw = str(src).strip().replace("\\", "/")
+        candidates: list[Path] = []
+        p = Path(raw)
+        if p.is_absolute():
+            candidates.append(p)
+        else:
+            candidates.append(self.md_dir / raw)
+            candidates.append(self.md_dir / "assets" / p.name)
+            # e.g. assets/sam2grasp/fig1.png already under md_dir
+            if raw.startswith("./"):
+                candidates.append(self.md_dir / raw[2:])
+        for c in candidates:
+            if c.is_file():
+                return c.resolve()
+        return None
 
 
 def set_run_font(run, size_pt, bold=False, italic=False, code=False):
@@ -78,10 +106,10 @@ def set_run_font(run, size_pt, bold=False, italic=False, code=False):
     rFonts.set(qn("w:eastAsia"), FONT_CN)
 
 
-def set_paragraph_format(p, space_after=Pt(6), first_line=False, left_indent=None):
+def set_paragraph_format(p, space_after=Pt(6), first_line=False, left_indent=None, space_before=Pt(0)):
     pf = p.paragraph_format
     pf.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
-    pf.space_after, pf.space_before = space_after, Pt(0)
+    pf.space_after, pf.space_before = space_after, space_before
     if first_line:
         pf.first_line_indent = Cm(0.74)
     if left_indent is not None:
@@ -173,6 +201,7 @@ def add_hyperlink(paragraph, text, url, size=SIZE_BODY, bold=False):
 
 
 def add_formatted_runs(paragraph, text, size=SIZE_BODY, base_bold=False):
+    text = normalize_quotes(text)
     pos = 0
     for m in INLINE_RE.finditer(text):
         if m.start() > pos:
@@ -180,7 +209,7 @@ def add_formatted_runs(paragraph, text, size=SIZE_BODY, base_bold=False):
             set_run_font(run, size, bold=base_bold)
         token = m.group(0)
         if token.startswith("**"):
-            run = paragraph.add_run(token[2:-2])
+            run = paragraph.add_run(normalize_quotes(token[2:-2]))
             set_run_font(run, size, bold=True)
         elif token.startswith("`"):
             run = paragraph.add_run(token[1:-1])
@@ -196,13 +225,14 @@ def add_formatted_runs(paragraph, text, size=SIZE_BODY, base_bold=False):
 
 def add_inline_runs(paragraph, text, size=SIZE_BODY, base_bold=False):
     """Render markdown inline: **bold**, `code`, \\(math\\), [text](url) hyperlinks."""
+    text = normalize_quotes(text)
     pos = 0
     for m in LINK_RE.finditer(text):
         if m.start() > pos:
             add_formatted_runs(paragraph, text[pos : m.start()], size, base_bold)
         display, url = m.group(1), m.group(2)
         bold = base_bold or (display.startswith("**") and display.endswith("**"))
-        display_clean = display.replace("**", "").replace("`", "")
+        display_clean = normalize_quotes(display.replace("**", "").replace("`", ""))
         add_hyperlink(paragraph, display_clean, url, size=size, bold=bold)
         pos = m.end()
     if pos < len(text):
@@ -289,15 +319,54 @@ def add_table(doc, rows):
     add_half_line_gap(doc)
 
 
-def add_image_as_address(doc, src: str, caption: str | None = None):
+def _picture_size_cm(path: Path) -> tuple[Cm, Cm | None]:
+    """Pick width (and optional height) so image fits page without huge height."""
+    try:
+        from PIL import Image  # optional; fallback if missing
+
+        with Image.open(path) as im:
+            w_px, h_px = im.size
+        if w_px <= 0 or h_px <= 0:
+            return IMG_MAX_WIDTH, None
+        aspect = h_px / w_px
+        width = IMG_MAX_WIDTH
+        height = Cm(width.cm * aspect)
+        if height > IMG_MAX_HEIGHT:
+            height = IMG_MAX_HEIGHT
+            width = Cm(height.cm / aspect)
+        return width, height
+    except Exception:
+        return IMG_MAX_WIDTH, None
+
+
+def add_image(doc, display_src: str, file_path: Path | None, caption: str | None = None):
+    """§8+§15: centered address line, then try embed scaled picture; caption centered."""
     add_half_line_gap(doc)
     p = doc.add_paragraph()
     set_paragraph_format(p, first_line=False)
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run(f"【插图地址】{src}")
+    run = p.add_run(f"【插图地址】{display_src}")
     set_run_font(run, SIZE_BODY)
+
+    if file_path is not None and file_path.is_file():
+        pic_p = doc.add_paragraph()
+        set_paragraph_format(pic_p, first_line=False, space_after=Pt(0))
+        pic_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        pic_run = pic_p.add_run()
+        width, height = _picture_size_cm(file_path)
+        try:
+            if height is not None:
+                pic_run.add_picture(str(file_path), width=width, height=height)
+            else:
+                pic_run.add_picture(str(file_path), width=width)
+        except Exception as exc:
+            warn = pic_p.add_run(f"（嵌入失败: {exc}）")
+            set_run_font(warn, SIZE_TABLE, italic=True)
+    elif file_path is None:
+        print(f"WARNING: image not found for {display_src}", file=sys.stderr)
+
     if caption:
-        cap = re.sub(r"</?em>", "", caption).strip().strip("*").strip()
+        cap = normalize_quotes(re.sub(r"</?em>", "", caption).strip().strip("*").strip())
         cp = doc.add_paragraph()
         set_paragraph_format(cp, first_line=False)
         cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -306,8 +375,13 @@ def add_image_as_address(doc, src: str, caption: str | None = None):
     add_half_line_gap(doc)
 
 
+# 兼容旧名
+def add_image_as_address(doc, src: str, caption: str | None = None, file_path: Path | None = None):
+    add_image(doc, src, file_path, caption=caption)
+
+
 def add_caption(doc, text: str):
-    cap = text.strip().strip("*").strip()
+    cap = normalize_quotes(text.strip().strip("*").strip())
     p = doc.add_paragraph()
     set_paragraph_format(p, first_line=False)
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -420,14 +494,18 @@ def parse_md(doc, md_text: str, images: ImageIndex):
                 cap = cap_m.group(1) if cap_m else None
                 if cap is None:
                     cap, i = peek_caption(lines, i, n)
-                add_image_as_address(doc, images.numbered(m.group(1)), caption=cap)
+                orig = m.group(1)
+                display = images.numbered(orig)
+                add_image(doc, display, images.resolve(orig), caption=cap)
             i += 1
             continue
 
         img_m = MD_IMG_RE.match(stripped)
         if img_m:
             cap, i = peek_caption(lines, i, n)
-            add_image_as_address(doc, images.numbered(img_m.group(2)), caption=cap)
+            orig = img_m.group(2)
+            display = images.numbered(orig)
+            add_image(doc, display, images.resolve(orig), caption=cap)
             i += 1
             continue
 
@@ -525,7 +603,7 @@ def convert(md_path: Path, out_path: Path) -> None:
     configure_heading_style(doc.styles["Heading 3"], SIZE_H3, Pt(10), Pt(6))
     configure_heading_style(doc.styles["Heading 4"], SIZE_H4, Pt(8), Pt(4))
 
-    parse_md(doc, md_path.read_text(encoding="utf-8"), ImageIndex())
+    parse_md(doc, md_path.read_text(encoding="utf-8"), ImageIndex(md_path.parent))
     enable_update_fields_on_open(doc)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(out_path)

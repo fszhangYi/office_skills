@@ -12,4 +12,5 @@
 12. 图及图名称需要居中
 13. 链接格式，要从 []() 改成 word 中的超链接，例如： [Figure 官方复盘](https://www.figure.ai/news/production-at-bmw) 改成在文字 "Figure 官方复盘" 上的超链接
 14. 插入超链接的文字颜色为 RGB(0,102,204)，字体中文为：宋体 英文为 times new roman 并且字号要和原来插入链接之前一致
-15. 所用全部图片都要序号，比如：assets/openvla_card.png 改成 assets/1.openvla_card.png 就是前面加上 1. 2. 3. 等; 所用图片放在同级 assets 目录下
+15. 所用全部图片都要序号，比如：assets/openvla_card.png 改成 assets/1.openvla_card.png 就是前面加上 1. 2. 3. 等; 所用图片放在同级 assets 目录下；在保存图片的基础上尝试将图片插入到 docx 中，并缩放到合适的大小。
+16. 使用引号包裹强调内容，例如：「三分钟共同语言」应改为：“三分钟共同语言”
