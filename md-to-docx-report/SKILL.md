@@ -5,9 +5,9 @@ description: >-
   (宋体/Times New Roman, 小四 body, 五号 tables/code, narrow margins, 1.5 line
   spacing, centered page numbers, numbered assets/N.filename address line
   plus embedded scaled images, Word hyperlinks in RGB(0,102,204), 「」→“”,
-  TOC field). Use when the user asks to turn .md into .docx, regenerate
-  plus*.docx / STAGE*.docx / script_plus.docx / chapter*.docx, or apply
-  docx 格式要求.
+  LaTeX→Word OMML, black/white code blocks, TOC field). Use when the user
+  asks to turn .md into .docx, regenerate plus*.docx / STAGE*.docx /
+  script_plus.docx / chapter*.docx, or apply docx 格式要求.
 ---
 
 # Markdown → 调研报告 DOCX
@@ -15,7 +15,7 @@ description: >-
 ## When to use
 
 - User asks to convert `*.md` → `*.docx` under a report project
-- User mentions `docx 格式要求` / 页码 / 目录 / 插图用地址代替 / 超链接颜色 / 插入图片
+- User mentions `docx 格式要求` / 页码 / 目录 / 插图用地址代替 / 超链接颜色 / 插入图片 / 公式 / 代码块
 - Regenerating `new_script.docx`, `plus9.docx`, `STAGE*.docx`, `script_plus.docx`, `chapter*.docx`, etc.
 
 ## Format rules (source of truth)
@@ -38,6 +38,8 @@ See [format-requirements.txt](format-requirements.txt)（与仓库根目录 `doc
 14. 插入超链接的文字颜色为 RGB(0,102,204)，字体中文为宋体、英文为 Times New Roman，并且字号与插入链接之前所在上下文一致（正文小四 / 表格五号 / 标题随 Heading 字号）
 15. 插图地址按出现顺序编号为 `assets/N.原文件名`（docx 显示路径）；路径一律写成同级 `assets/` 下；**在写地址的同时尝试把图片嵌入 docx，并缩放到合适宽度**（默认约 14cm，过高则按高度再压）；找不到文件时仅保留地址行并警告
 16. 强调引号规范化：正文中的「…」转为中文弯引号 “… ”
+17. 公式转为 Word 公式：`\(…\)` / `$…$` / `\[…\]` / `$$…$$`，以及文中的 LaTeX 片段（如 `(s_t,a^*_{t,1})`、`a^*_{t,1}\neq a^*_{t,2}`）写成 OMML，不要当纯斜体文本
+18. 围栏代码块：整段段落底纹黑色，代码文字白色、Consolas、五号
 
 ## Reference document (STAGE3.docx)
 
@@ -71,7 +73,9 @@ python md-to-docx-report/scripts/md_to_docx.py STAGE2.md script_plus.docx
 4. MD `![](assets/...)` / `<img src="assets/...">` → 居中 `【插图地址】assets/N.filename` **并尝试嵌入**缩放图片 + 居中图注
 5. `[text](url)` must become Word hyperlinks in RGB(0,102,204) with 宋体/Times New Roman and context font size
 6. Normalize 「」 → “” in body text (§16)
-7. Dependencies: `python-docx` only
+7. LaTeX math → Word equations (§17); do not leave `a^*_{t,1}` as plain italic
+8. Fenced code blocks: black background, white text (§18)
+9. Dependencies: `python-docx` only（嵌入图缩放可选 Pillow）
 
 ## Markdown expectations
 
