@@ -11,6 +11,7 @@ Cursor Agent Skills for report writing and Markdown ↔ DOCX / PDF conversion.
 | [`pdf-to-md-report`](pdf-to-md-report/) | Convert research/arXiv PDFs to Markdown (text, tables/equations, figure crops, optional EN/ZH) |
 | [`hik_report`](hik_report/) | Report writing style, content summarization, and briefing-ready sentence annotations |
 | [`graspvla-repro`](graspvla-repro/) | Reproduce GraspVLA (preflight on disk/memory/CUDA, then Model Server + `offline_test`) |
+| [`autodl-disk-cleanup`](autodl-disk-cleanup/) | Free AutoDL system disk: clean `/tmp`/apt cache, migrate conda/venv to `autodl-tmp` |
 
 ## Install into Cursor
 
@@ -28,6 +29,7 @@ cp -a docx-to-md-report ~/.cursor/skills/docx-to-md-report
 cp -a pdf-to-md-report ~/.cursor/skills/pdf-to-md-report
 cp -a hik_report ~/.cursor/skills/hik_report
 cp -a graspvla-repro ~/.cursor/skills/graspvla-repro
+cp -a autodl-disk-cleanup ~/.cursor/skills/autodl-disk-cleanup
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
