@@ -1,6 +1,6 @@
 # office_skills
 
-Cursor Agent Skills for report writing and Markdown ↔ DOCX / PDF / 立项 XLSX conversion.
+Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX conversion, and Scheme A desktop packaging.
 
 ## Skills
 
@@ -14,6 +14,10 @@ Cursor Agent Skills for report writing and Markdown ↔ DOCX / PDF / 立项 XLSX
 | [`hik-project-xlsx2md`](hik-project-xlsx2md/) | Restore 立项报告 XLSX to Markdown (`##` sections) |
 | [`graspvla-repro`](graspvla-repro/) | Reproduce GraspVLA (preflight on disk/memory/CUDA, then Model Server + `offline_test`) |
 | [`autodl-disk-cleanup`](autodl-disk-cleanup/) | Free AutoDL system disk: clean `/tmp`/apt cache, migrate conda/venv to `autodl-tmp` |
+| [`scheme-a-desktop-compat`](scheme-a-desktop-compat/) | Check Scheme A stack; add cross-platform desktop packaging compat code |
+| [`scheme-a-linux-to-windows-desktop`](scheme-a-linux-to-windows-desktop/) | Linux host → self-contained Windows desktop (Wine + PyInstaller) |
+| [`scheme-a-linux-to-linux-desktop`](scheme-a-linux-to-linux-desktop/) | Linux host → self-contained Linux desktop (PyInstaller onedir) |
+| [`archive-split-restore`](archive-split-restore/) | Split/restore large archives (zip/tar.gz/…) into fixed-size chunks |
 
 ## Install into Cursor
 
@@ -27,6 +31,10 @@ cp -a hik-project-md2xlsx /path/to/workspace/.cursor/skills/hik-project-md2xlsx
 cp -a hik-project-xlsx2md /path/to/workspace/.cursor/skills/hik-project-xlsx2md
 cp -a graspvla-repro /path/to/workspace/.cursor/skills/graspvla-repro
 cp -a autodl-disk-cleanup /path/to/workspace/.cursor/skills/autodl-disk-cleanup
+cp -a scheme-a-desktop-compat /path/to/workspace/.cursor/skills/scheme-a-desktop-compat
+cp -a scheme-a-linux-to-windows-desktop /path/to/workspace/.cursor/skills/scheme-a-linux-to-windows-desktop
+cp -a scheme-a-linux-to-linux-desktop /path/to/workspace/.cursor/skills/scheme-a-linux-to-linux-desktop
+cp -a archive-split-restore /path/to/workspace/.cursor/skills/archive-split-restore
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -37,6 +45,10 @@ cp -a hik-project-md2xlsx ~/.cursor/skills/hik-project-md2xlsx
 cp -a hik-project-xlsx2md ~/.cursor/skills/hik-project-xlsx2md
 cp -a graspvla-repro ~/.cursor/skills/graspvla-repro
 cp -a autodl-disk-cleanup ~/.cursor/skills/autodl-disk-cleanup
+cp -a scheme-a-desktop-compat ~/.cursor/skills/scheme-a-desktop-compat
+cp -a scheme-a-linux-to-windows-desktop ~/.cursor/skills/scheme-a-linux-to-windows-desktop
+cp -a scheme-a-linux-to-linux-desktop ~/.cursor/skills/scheme-a-linux-to-linux-desktop
+cp -a archive-split-restore ~/.cursor/skills/archive-split-restore
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
