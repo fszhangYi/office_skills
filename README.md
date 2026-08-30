@@ -19,6 +19,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`scheme-a-linux-to-linux-desktop`](scheme-a-linux-to-linux-desktop/) | Linux host → self-contained Linux desktop (PyInstaller onedir) |
 | [`archive-split-restore`](archive-split-restore/) | Split/restore large archives (zip/tar.gz/…) into fixed-size chunks |
 | [`cookie-session-auth`](cookie-session-auth/) | Cookie + opaque session login for Python HTTP + React SPA (embody_model_eval pattern) |
+| [`embody-ui-style`](embody-ui-style/) | Embody Model Eval visual design: teal/spark tokens, page CSS, glass/pill chrome |
 
 ## Install into Cursor
 
@@ -37,6 +38,7 @@ cp -a scheme-a-linux-to-windows-desktop /path/to/workspace/.cursor/skills/scheme
 cp -a scheme-a-linux-to-linux-desktop /path/to/workspace/.cursor/skills/scheme-a-linux-to-linux-desktop
 cp -a archive-split-restore /path/to/workspace/.cursor/skills/archive-split-restore
 cp -a cookie-session-auth /path/to/workspace/.cursor/skills/cookie-session-auth
+cp -a embody-ui-style /path/to/workspace/.cursor/skills/embody-ui-style
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -52,6 +54,7 @@ cp -a scheme-a-linux-to-windows-desktop ~/.cursor/skills/scheme-a-linux-to-windo
 cp -a scheme-a-linux-to-linux-desktop ~/.cursor/skills/scheme-a-linux-to-linux-desktop
 cp -a archive-split-restore ~/.cursor/skills/archive-split-restore
 cp -a cookie-session-auth ~/.cursor/skills/cookie-session-auth
+cp -a embody-ui-style ~/.cursor/skills/embody-ui-style
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
