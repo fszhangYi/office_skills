@@ -21,6 +21,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`cookie-session-auth`](cookie-session-auth/) | Cookie + opaque session login for Python HTTP + React SPA (embody_model_eval pattern) |
 | [`embody-ui-style`](embody-ui-style/) | Embody Model Eval visual design: teal/spark tokens, page CSS, glass/pill chrome |
 | [`embody-appearance-theme`](embody-appearance-theme/) | Embody light/dark + density prefs: data-theme, AppearanceProvider, FOUC boot |
+| [`embody-i18n`](embody-i18n/) | Embody zh/en LocaleProvider, messages/pageStrings, runtime t without i18next |
 
 ## Install into Cursor
 
@@ -41,6 +42,7 @@ cp -a archive-split-restore /path/to/workspace/.cursor/skills/archive-split-rest
 cp -a cookie-session-auth /path/to/workspace/.cursor/skills/cookie-session-auth
 cp -a embody-ui-style /path/to/workspace/.cursor/skills/embody-ui-style
 cp -a embody-appearance-theme /path/to/workspace/.cursor/skills/embody-appearance-theme
+cp -a embody-i18n /path/to/workspace/.cursor/skills/embody-i18n
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -58,6 +60,7 @@ cp -a archive-split-restore ~/.cursor/skills/archive-split-restore
 cp -a cookie-session-auth ~/.cursor/skills/cookie-session-auth
 cp -a embody-ui-style ~/.cursor/skills/embody-ui-style
 cp -a embody-appearance-theme ~/.cursor/skills/embody-appearance-theme
+cp -a embody-i18n ~/.cursor/skills/embody-i18n
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
