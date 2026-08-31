@@ -10,6 +10,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`docx-to-md-report`](docx-to-md-report/) | Restore DOCX reports to Markdown, with hyperlinks as `[text](url)` |
 | [`pdf-to-md-report`](pdf-to-md-report/) | Convert research/arXiv PDFs to Markdown (text, tables/equations, figure crops, optional EN/ZH) |
 | [`hik_report`](hik_report/) | Report writing style, content summarization, and briefing-ready sentence annotations |
+| [`hik-get-dumber`](hik-get-dumber/) | Rewrite engineer/research reports into short GM decision briefs (cut depth, elevate route choice) |
 | [`hik-project-md2xlsx`](hik-project-md2xlsx/) | Convert 立项/预研 Markdown to 立项报告-style 2-column XLSX |
 | [`hik-project-xlsx2md`](hik-project-xlsx2md/) | Restore 立项报告 XLSX to Markdown (`##` sections) |
 | [`graspvla-repro`](graspvla-repro/) | Reproduce GraspVLA (preflight on disk/memory/CUDA, then Model Server + `offline_test`) |
@@ -32,6 +33,7 @@ cp -a md-to-docx-report /path/to/workspace/.cursor/skills/md-to-docx-report
 cp -a docx-to-md-report /path/to/workspace/.cursor/skills/docx-to-md-report
 cp -a pdf-to-md-report /path/to/workspace/.cursor/skills/pdf-to-md-report
 cp -a hik_report /path/to/workspace/.cursor/skills/hik_report
+cp -a hik-get-dumber /path/to/workspace/.cursor/skills/hik-get-dumber
 cp -a hik-project-md2xlsx /path/to/workspace/.cursor/skills/hik-project-md2xlsx
 cp -a hik-project-xlsx2md /path/to/workspace/.cursor/skills/hik-project-xlsx2md
 cp -a graspvla-repro /path/to/workspace/.cursor/skills/graspvla-repro
@@ -51,6 +53,7 @@ cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
 cp -a docx-to-md-report ~/.cursor/skills/docx-to-md-report
 cp -a pdf-to-md-report ~/.cursor/skills/pdf-to-md-report
 cp -a hik_report ~/.cursor/skills/hik_report
+cp -a hik-get-dumber ~/.cursor/skills/hik-get-dumber
 cp -a hik-project-md2xlsx ~/.cursor/skills/hik-project-md2xlsx
 cp -a hik-project-xlsx2md ~/.cursor/skills/hik-project-xlsx2md
 cp -a graspvla-repro ~/.cursor/skills/graspvla-repro
