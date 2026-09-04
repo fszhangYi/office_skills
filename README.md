@@ -24,6 +24,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`embody-appearance-theme`](embody-appearance-theme/) | Embody light/dark + density prefs: data-theme, AppearanceProvider, FOUC boot |
 | [`embody-i18n`](embody-i18n/) | Embody zh/en LocaleProvider, messages/pageStrings, runtime t without i18next |
 | [`embody-login-page`](embody-login-page/) | Embody /login UI: card, CSS atmosphere, from-redirect, lang chrome |
+| [`embody-path-picker`](embody-path-picker/) | Embody server-scoped cascade PathPickerModal + `/api/fs/children` |
 
 ## Install into Cursor
 
@@ -47,6 +48,7 @@ cp -a embody-ui-style /path/to/workspace/.cursor/skills/embody-ui-style
 cp -a embody-appearance-theme /path/to/workspace/.cursor/skills/embody-appearance-theme
 cp -a embody-i18n /path/to/workspace/.cursor/skills/embody-i18n
 cp -a embody-login-page /path/to/workspace/.cursor/skills/embody-login-page
+cp -a embody-path-picker /path/to/workspace/.cursor/skills/embody-path-picker
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -67,6 +69,7 @@ cp -a embody-ui-style ~/.cursor/skills/embody-ui-style
 cp -a embody-appearance-theme ~/.cursor/skills/embody-appearance-theme
 cp -a embody-i18n ~/.cursor/skills/embody-i18n
 cp -a embody-login-page ~/.cursor/skills/embody-login-page
+cp -a embody-path-picker ~/.cursor/skills/embody-path-picker
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
