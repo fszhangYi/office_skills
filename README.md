@@ -27,6 +27,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`embody-path-picker`](embody-path-picker/) | Embody server-scoped cascade PathPickerModal + `/api/fs/children` |
 | [`embody-settings-modal`](embody-settings-modal/) | Embody homepage Settings gear + modal layout/style (tabs, rows, toggles) |
 | [`add-favicon`](add-favicon/) | Brand favicon/app icon for FastAPI HTML + PyInstaller Windows EXE |
+| [`sensors-view-iframe-embed`](sensors-view-iframe-embed/) | Host SPA embeds sensors-view via iframe (badge, locale/theme sync, ping, chrome hide) |
 
 ## Install into Cursor
 
@@ -53,6 +54,7 @@ cp -a embody-login-page /path/to/workspace/.cursor/skills/embody-login-page
 cp -a embody-path-picker /path/to/workspace/.cursor/skills/embody-path-picker
 cp -a embody-settings-modal /path/to/workspace/.cursor/skills/embody-settings-modal
 cp -a add-favicon /path/to/workspace/.cursor/skills/add-favicon
+cp -a sensors-view-iframe-embed /path/to/workspace/.cursor/skills/sensors-view-iframe-embed
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -76,6 +78,7 @@ cp -a embody-login-page ~/.cursor/skills/embody-login-page
 cp -a embody-path-picker ~/.cursor/skills/embody-path-picker
 cp -a embody-settings-modal ~/.cursor/skills/embody-settings-modal
 cp -a add-favicon ~/.cursor/skills/add-favicon
+cp -a sensors-view-iframe-embed ~/.cursor/skills/sensors-view-iframe-embed
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
