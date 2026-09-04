@@ -1,6 +1,6 @@
 # Embody path picker — reference
 
-Derived from `embody_model_eval`. Rename root keys (`act` / `embody` / `pi05`) when porting.
+Derived from `embody_model_eval`. Rename root keys (`act` / `embody` / `pi05` / `workspace`) when porting.
 
 ## Source files
 
@@ -10,8 +10,8 @@ Derived from `embody_model_eval`. Rename root keys (`act` / `embody` / `pi05`) w
 | `frontend/src/features/actPipeline/types.ts` | `PathKind`, `BrowseRoot`, `StepField`, `FsEntry` |
 | `frontend/src/features/actPipeline/api.ts` | `fetchFsChildren` |
 | `frontend/src/styles/act-pipeline.css` | `.path-picker-*` (~L762–932) |
-| `frontend/src/pages/ActPipelinePage.tsx` | `PickerTarget`, `FieldInput`, train YAML save |
-| `frontend/src/pages/Pi05PipelinePage.tsx` | Same pattern for π0.5 |
+| `frontend/src/pages/ActPipelinePage.tsx` | `PickerTarget`, `FieldInput`, train YAML save; `rootBrowseAnchor` |
+| `frontend/src/pages/Pi05PipelinePage.tsx` | Same pattern; `PI05_BROWSE_SUPERROOT` |
 | `scripts/fs_browse.py` | `ROOTS`, `list_children`, `browse_roots`, `stat_path` |
 | `scripts/agent_server.py` | `/api/fs/children`, `/roots`, `/stat` |
 | `scripts/act_pipeline_runner.py` | Train step field schema (`pathKind` / `browseRoot`) |
@@ -19,11 +19,13 @@ Derived from `embody_model_eval`. Rename root keys (`act` / `embody` / `pi05`) w
 
 Other consumers of the same modal (same abstraction): DatasetConverter, ModelAnalysis, Pi05Setup, Pi05Analysis.
 
+**Known non-React port:** `sensors-dcs` (`src/sensors_dcs/fs_browse.py`, path-picker block in `viz.py` PREVIEW_HTML) — Settings → 配置文件.
+
 ## Types (copy shape)
 
 ```ts
 export type PathKind = 'file' | 'dir'
-export type BrowseRoot = 'act' | 'embody' | 'pi05'  // extend per app
+export type BrowseRoot = 'act' | 'embody' | 'pi05'  // extend per app (e.g. 'workspace')
 
 export interface StepField {
   key: string
@@ -76,10 +78,49 @@ export function fetchFsChildren(rootKey: string, path = '', rootPath?: string) {
 
 ### `fs_browse` security
 
-- Default roots from module constants (`ACT_ROBOT_ROOT`, `EMBODY_ROOT`, `PI05_ROOT`).
+- Default roots from module constants (`ACT_ROBOT_ROOT`, `EMBODY_ROOT`, `PI05_ROOT`) or app helpers (`project_root().parent` as `workspace`).
 - `rootPath` → custom root (`rootKey` becomes `"custom"`); still must be a directory.
 - Target must be under root via `Path.resolve` + `relative_to`.
 - Hidden names (`.`*) and `__pycache__` skipped.
+
+## Sandbox vs seed (API mapping)
+
+```text
+Modal props                API query
+─────────────────────      ────────────────────────────
+browseAnchor
+  || roots[browseRoot]  →  rootPath  (and listing root)
+value / draft seed      →  path walk via relParts only
+```
+
+`buildColumns(browseRoot, rootPath, seed)` calls:
+
+```ts
+fetchFsChildren(rootKey, rootPath, rootPath)           // first column = sandbox listing
+fetchFsChildren(rootKey, hit.path, rootPath)           // deeper columns; rootPath unchanged
+```
+
+Wrong (common port bug):
+
+```ts
+// seed = "/repo/configs/app.yaml"
+browseAnchor = dirname(seed)   // → chroot becomes …/configs — cannot see siblings
+```
+
+Right for field browse:
+
+```ts
+browseRoot = 'workspace'       // ROOTS.workspace = project_root().parent
+browseAnchor = undefined
+value = seed                   // expand columns toward current file
+```
+
+Right for “change project root” (embody Act):
+
+```ts
+browseAnchor = parent(currentRoot) || '/root/autodl-tmp'  // widen chroot one level
+pathKind = 'dir'
+```
 
 ## Page confirm branches (ACT)
 
@@ -101,7 +142,7 @@ Modal prop derivation:
 
 | `picker.kind` | `browseRoot` | `pathKind` | `browseAnchor` |
 | --- | --- | --- | --- |
-| `field` | `field.browseRoot \|\| 'act'` | `field.pathKind \|\| 'dir'` | — |
+| `field` | `field.browseRoot \|\| 'act'` | `field.pathKind \|\| 'dir'` | — (keep sandbox = `roots[browseRoot]`) |
 | `root` | `picker.root` | `'dir'` | parent-of-current / superroot |
 | `saveYaml` | `'act'` (or app default) | `'file'` | — |
 
@@ -161,8 +202,10 @@ Save-as-YAML uses the same modal (`kind: 'saveYaml'`), independent of Run.
 
 ## Porting tips
 
-1. Start with `fs_browse.py` + one root key; add more roots only when needed.
-2. Copy `PathPickerModal.tsx` almost verbatim; swap `t()` for literals or your i18n.
+1. Start with `fs_browse.py` + one root key; prefer `project_root().parent` as the primary sandbox unless the product is intentionally locked to one subtree.
+2. Copy `PathPickerModal.tsx` almost verbatim; swap `t()` for literals or your i18n. For FastAPI HTML monoliths, port the same cascade JS/CSS without React.
 3. Extract CSS block into `path-picker.css` if the host has no `act-pipeline.css`.
-4. Prefer schema-driven `StepField` over ad-hoc browse buttons.
+4. Prefer schema-driven `StepField` over ad-hoc browse buttons when the page already has a field schema.
 5. If auth exists (`cookie-session-auth`), protect `/api/fs/*` like other `/api` routes.
+6. Keep picker Confirm = “fill path”; put validate / persist / restart on a separate button when those are destructive.
+7. Embedded JS in Python triple-quoted HTML: write path-split regexes as `[/\\\\]`, not `\/`, to avoid `SyntaxWarning: invalid escape sequence`.

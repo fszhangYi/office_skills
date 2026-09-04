@@ -46,19 +46,47 @@ fs_browse.list_children(root_key, path, root_path?)
 
 **Hard rule:** browsing is **server-side and sandbox-scoped**. Never expose arbitrary `/` listing without a root allowlist.
 
+## Critical: sandbox root vs seed path
+
+Two different strings — do not conflate them:
+
+| Concept | Role | Typical value |
+| --- | --- | --- |
+| **Sandbox root** | Chroot for every `/api/fs/children` call (`roots[browseRoot]` or `browseAnchor` → `rootPath`) | Parent of project / lab superroot |
+| **Seed / value** | Current field path; only drives cascade column focus via `relParts` | e.g. `…/myapp/configs/foo.yaml` |
+
+`PathPickerModal` sets `rootPath = browseAnchor || roots[browseRoot]` and passes that same string as `rootPath` on **every** fetch. So:
+
+- **Do** keep sandbox fixed for a given picker open (usually a stable ROOTS entry).
+- **Do** pass the current file/dir path only as `value` / draft seed so columns expand to it.
+- **Don’t** set `browseAnchor` (or inline `rootPath`) to the seed file’s parent — that shrinks the chroot to one folder and users cannot walk up to siblings.
+- **Do** use `browseAnchor` only when intentionally changing the chroot (embody `kind: 'root'`: parent of current project root / `PI05_BROWSE_SUPERROOT`).
+
+### Choosing default ROOTS
+
+For “pick a config anywhere near this repo” UIs (Settings → 配置文件, etc.):
+
+```python
+# Preferred primary key for lab tools on AutoDL / shared disks
+"workspace": project_root().resolve().parent   # NOT project_root(), NOT …/configs
+```
+
+Embody π0.5 hardcodes the same idea (`PI05_BROWSE_SUPERROOT = '/root/autodl-tmp'`). Narrow roots (`…/configs`, user-data only) are optional shortcuts — not the default sandbox for a general file picker.
+
 ## Port checklist
 
 ```text
 - [ ] 1. Backend: fs_browse.py (ROOTS map, list_children, optional browse_roots/stat_path)
-- [ ] 2. HTTP: GET /api/fs/children?root=&path=&rootPath= (+ optional /roots, /stat)
-- [ ] 3. Types: PathKind, BrowseRoot, StepField.pathKind/browseRoot
-- [ ] 4. Client: fetchFsChildren(rootKey, path, rootPath?)
-- [ ] 5. PathPickerModal + .path-picker-* CSS (global, not page-prefixed only)
-- [ ] 6. FieldInput: path = text + Browse; placeholder by pathKind
-- [ ] 7. Page PickerTarget union + single modal instance
-- [ ] 8. onConfirm branches: field → setField; root → set root; saveYaml → write API
-- [ ] 9. i18n: pathPicker.* (+ page browse labels)
-- [ ] 10. credentials: 'same-origin' if cookie auth; gate /api/fs/* like other APIs
+- [ ] 2. Decide primary ROOT: usually project_root().parent (document key name)
+- [ ] 3. HTTP: GET /api/fs/children?root=&path=&rootPath= (+ optional /roots, /stat)
+- [ ] 4. Types: PathKind, BrowseRoot, StepField.pathKind/browseRoot (or page-local equivalents)
+- [ ] 5. Client: fetchFsChildren(rootKey, path, rootPath?) — sandbox ≠ seed
+- [ ] 6. PathPickerModal + .path-picker-* CSS (global, not page-prefixed only)
+- [ ] 7. FieldInput: path = text + Browse; placeholder by pathKind
+- [ ] 8. Page PickerTarget union + single modal instance (or one overlay in HTML apps)
+- [ ] 9. onConfirm → fill field only; apply/save/restart is a separate control if needed
+- [ ] 10. i18n: pathPicker.* (+ page browse labels)
+- [ ] 11. credentials: 'same-origin' if cookie auth; gate /api/fs/* like other APIs
 ```
 
 ## Backend recipe
@@ -72,7 +100,7 @@ Minimal `list_children`:
 ```json
 {
   "ok": true,
-  "rootKey": "act|embody|pi05|custom",
+  "rootKey": "act|embody|pi05|workspace|custom",
   "root": "/abs/root",
   "path": "/abs/cwd",
   "entries": [{ "name": "...", "path": "/abs/...", "isDir": true }]
@@ -94,17 +122,18 @@ Optional:
 interface PathPickerModalProps {
   open: boolean
   title: string
-  value: string                 // seed / current path
+  value: string                 // seed / current path (cascade focus only)
   browseRoot: BrowseRoot        // which ROOTS key for API
   roots: Record<BrowseRoot, string>
   pathKind: 'file' | 'dir'
-  browseAnchor?: string         // optional listing root override → rootPath
+  browseAnchor?: string         // optional chroot override → rootPath (not seed’s parent!)
   onClose: () => void
   onConfirm: (path: string) => void
 }
 ```
 
-Effective listing root: `browseAnchor || roots[browseRoot]`.
+Effective **sandbox**: `browseAnchor || roots[browseRoot]`.  
+Effective **seed**: `value` (fallback to sandbox when empty).
 
 ### 2. Cascade behavior
 
@@ -123,7 +152,7 @@ type PickerTarget =
 ```
 
 - Browse on path field → `{ kind: 'field', field }`
-- Change project root → `{ kind: 'root', root }` + `pathKind: 'dir'`, often with `browseAnchor` = parent of current root
+- Change project root → `{ kind: 'root', root }` + `pathKind: 'dir'`, often with `browseAnchor` = **parent of current root** (widen chroot)
 - “Save as …” → `{ kind: 'saveYaml' }` + `pathKind: 'file'`
 
 Render **one** `<PathPickerModal>` when `picker != null`; derive `title` / `browseRoot` / `pathKind` / `value` from the union.
@@ -139,9 +168,18 @@ Backend pipeline/spec emits path fields:
 
 UI loops `fields` and only special-cases `type === 'path'` for the browse button. Do not hardcode every path key in the page.
 
-### 5. Train-YAML side effect (optional)
+### 5. Side effects after path (orthogonal)
 
-Selecting `configPath` can `useEffect` → `POST …/load-train-yaml` to merge hyperparams. That is **orthogonal** to the picker; the picker only supplies the path string.
+The picker **only** returns a path string. Loading YAML, writing `active_config`, restarting the process, etc. belong on a separate Confirm/Apply control (or `useEffect` on the field) — same pattern as embody train `load-train-yaml`.
+
+### 6. Non-React / monolith HTML hosts
+
+Same contracts work inside a FastAPI-served HTML string (e.g. sensors-dcs `viz.py`):
+
+- Copy `.path-picker-*` CSS + overlay markup once.
+- One JS state object + `fetchFsChildren` / `buildPickerColumns` / `openPathPicker`.
+- Open: `rootPath = roots.workspace` (fixed); `draft = currentConfigPath` (seed).
+- If JS lives inside a Python `"""…"""` string, avoid regex literals with `\/` (Python `SyntaxWarning`); prefer character classes like `[/\\\\]`.
 
 ## File vs dir
 
@@ -155,10 +193,12 @@ Selecting `configPath` can `useEffect` → `POST …/load-train-yaml` to merge h
 ## Do / Don’t
 
 - **Do** keep paths under allowlisted roots (or explicit `rootPath`).
+- **Do** default sandbox to parent-of-project when users need sibling trees.
 - **Do** allow manual path edit in the modal footer field.
 - **Don’t** use browser file inputs for server workspace paths.
 - **Don’t** treat `pathKind` as server-side validation unless you add it deliberately.
 - **Don’t** put cascade CSS only under a page scope if other pages reuse the modal (embody: global `.path-picker-*`).
+- **Don’t** reuse the seed file’s parent as `browseAnchor` / `rootPath`.
 
 ## Install
 
