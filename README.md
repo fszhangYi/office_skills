@@ -25,6 +25,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`embody-i18n`](embody-i18n/) | Embody zh/en LocaleProvider, messages/pageStrings, runtime t without i18next |
 | [`embody-login-page`](embody-login-page/) | Embody /login UI: card, CSS atmosphere, from-redirect, lang chrome |
 | [`embody-path-picker`](embody-path-picker/) | Embody server-scoped cascade PathPickerModal + `/api/fs/children` |
+| [`add-favicon`](add-favicon/) | Brand favicon/app icon for FastAPI HTML + PyInstaller Windows EXE |
 
 ## Install into Cursor
 
@@ -49,6 +50,7 @@ cp -a embody-appearance-theme /path/to/workspace/.cursor/skills/embody-appearanc
 cp -a embody-i18n /path/to/workspace/.cursor/skills/embody-i18n
 cp -a embody-login-page /path/to/workspace/.cursor/skills/embody-login-page
 cp -a embody-path-picker /path/to/workspace/.cursor/skills/embody-path-picker
+cp -a add-favicon /path/to/workspace/.cursor/skills/add-favicon
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -70,6 +72,7 @@ cp -a embody-appearance-theme ~/.cursor/skills/embody-appearance-theme
 cp -a embody-i18n ~/.cursor/skills/embody-i18n
 cp -a embody-login-page ~/.cursor/skills/embody-login-page
 cp -a embody-path-picker ~/.cursor/skills/embody-path-picker
+cp -a add-favicon ~/.cursor/skills/add-favicon
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
