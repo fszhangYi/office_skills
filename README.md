@@ -1,6 +1,6 @@
 # office_skills
 
-Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX conversion, and Scheme A desktop packaging.
+Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX conversion, Scheme A desktop packaging, and geometric camera FOV analysis.
 
 ## Skills
 
@@ -28,6 +28,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`embody-settings-modal`](embody-settings-modal/) | Embody homepage Settings gear + modal layout/style (tabs, rows, toggles) |
 | [`add-favicon`](add-favicon/) | Brand favicon/app icon for FastAPI HTML + PyInstaller Windows EXE |
 | [`sensors-view-iframe-embed`](sensors-view-iframe-embed/) | Host SPA embeds sensors-view via iframe (badge, locale/theme sync, ping, chrome hide) |
+| [`camera-fov-analysis`](camera-fov-analysis/) | Geometric wrist/gripper camera FOV coverage (D405-style crops, report + PNGs) |
 
 ## Install into Cursor
 
@@ -55,6 +56,7 @@ cp -a embody-path-picker /path/to/workspace/.cursor/skills/embody-path-picker
 cp -a embody-settings-modal /path/to/workspace/.cursor/skills/embody-settings-modal
 cp -a add-favicon /path/to/workspace/.cursor/skills/add-favicon
 cp -a sensors-view-iframe-embed /path/to/workspace/.cursor/skills/sensors-view-iframe-embed
+cp -a camera-fov-analysis /path/to/workspace/.cursor/skills/camera-fov-analysis
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -79,6 +81,7 @@ cp -a embody-path-picker ~/.cursor/skills/embody-path-picker
 cp -a embody-settings-modal ~/.cursor/skills/embody-settings-modal
 cp -a add-favicon ~/.cursor/skills/add-favicon
 cp -a sensors-view-iframe-embed ~/.cursor/skills/sensors-view-iframe-embed
+cp -a camera-fov-analysis ~/.cursor/skills/camera-fov-analysis
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.

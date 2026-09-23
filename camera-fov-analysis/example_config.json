@@ -1,0 +1,51 @@
+{
+  "frame": "EFG-C65 STEP, mm, right-handed; X jaw, Y toward tip, Z cover normal",
+  "units": "mm",
+  "lens": [-6.93, 50.0, 210.0],
+  "look": [0.0, 0.7071067811865476, -0.7071067811865475],
+  "right": [-1.0, 0.0, 0.0],
+  "modes": [
+    {
+      "id": "HD87",
+      "label": "产品页 87×58 (1280×720 / 848×480 / 640×360)",
+      "H_deg": 87.0,
+      "V_deg": 58.0,
+      "aspect": "16:9"
+    },
+    {
+      "id": "HD84",
+      "label": "手册 D405 HD 84×58",
+      "H_deg": 84.0,
+      "V_deg": 58.0,
+      "aspect": "16:9"
+    },
+    {
+      "id": "VGA80",
+      "label": "VGA 估算 ~80×64 (640×480)",
+      "H_deg": 80.0,
+      "V_deg": 64.0,
+      "aspect": "4:3"
+    },
+    {
+      "id": "VGA75",
+      "label": "VGA 参考 75×62 (宽镜头族)",
+      "H_deg": 75.0,
+      "V_deg": 62.0,
+      "aspect": "4:3"
+    }
+  ],
+  "samples": [
+    {"name": "root_L", "xyz": [-7.43, 66.0, 121.79], "tag": "root"},
+    {"name": "root_R", "xyz": [-6.43, 66.0, 121.79], "tag": "root"},
+    {"name": "mid_L", "xyz": [-7.43, 99.0, 121.79], "tag": "blade"},
+    {"name": "mid_R", "xyz": [-6.43, 99.0, 121.79], "tag": "blade"},
+    {"name": "tip_L", "xyz": [-7.43, 128.51, 121.79], "tag": "blade"},
+    {"name": "tip_R", "xyz": [-6.43, 128.51, 121.79], "tag": "blade"},
+    {"name": "hook_c_L", "xyz": [-32.18, 128.51, 121.79], "tag": "hook_c"},
+    {"name": "hook_c_R", "xyz": [18.32, 128.51, 121.79], "tag": "hook_c"},
+    {"name": "hook_o_L", "xyz": [-65.18, 128.51, 121.79], "tag": "hook_o"},
+    {"name": "hook_o_R", "xyz": [51.32, 128.51, 121.79], "tag": "hook_o"}
+  ],
+  "footprint_depths_mm": [70, 90, 110, 118, 120],
+  "notes": "Replace sample xyz with values from your CAD / make_bracket; hook_c = closed, hook_o = open."
+}
