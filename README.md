@@ -29,7 +29,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`add-favicon`](add-favicon/) | Brand favicon/app icon for FastAPI HTML + PyInstaller Windows EXE |
 | [`sensors-view-iframe-embed`](sensors-view-iframe-embed/) | Host SPA embeds sensors-view via iframe (badge, locale/theme sync, ping, chrome hide) |
 | [`camera-fov-analysis`](camera-fov-analysis/) | Geometric wrist/gripper camera FOV coverage (D405-style crops, report + PNGs) |
-| [`pyqt-web-win-win-package`](pyqt-web-win-win-package/) | Windows → self-contained PyQt/PySide + WebEngine onedir (no Python/Qt/Miniconda on the target) |
+| [`pyqt-web-win-win-package`](pyqt-web-win-win-package/) | Windows → self-contained PyQt/PySide + WebEngine: one exe when possible, otherwise a timestamped zip (no Python/Qt/Miniconda on the target) |
 
 ## Install into Cursor
 
