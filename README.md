@@ -29,6 +29,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`add-favicon`](add-favicon/) | Brand favicon/app icon for FastAPI HTML + PyInstaller Windows EXE |
 | [`sensors-view-iframe-embed`](sensors-view-iframe-embed/) | Host SPA embeds sensors-view via iframe (badge, locale/theme sync, ping, chrome hide) |
 | [`camera-fov-analysis`](camera-fov-analysis/) | Geometric wrist/gripper camera FOV coverage (D405-style crops, report + PNGs) |
+| [`pyqt-web-win-win-package`](pyqt-web-win-win-package/) | Windows → self-contained PyQt/PySide + WebEngine onedir (no Python/Qt/Miniconda on the target) |
 
 ## Install into Cursor
 
@@ -57,6 +58,7 @@ cp -a embody-settings-modal /path/to/workspace/.cursor/skills/embody-settings-mo
 cp -a add-favicon /path/to/workspace/.cursor/skills/add-favicon
 cp -a sensors-view-iframe-embed /path/to/workspace/.cursor/skills/sensors-view-iframe-embed
 cp -a camera-fov-analysis /path/to/workspace/.cursor/skills/camera-fov-analysis
+cp -a pyqt-web-win-win-package /path/to/workspace/.cursor/skills/pyqt-web-win-win-package
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -82,6 +84,7 @@ cp -a embody-settings-modal ~/.cursor/skills/embody-settings-modal
 cp -a add-favicon ~/.cursor/skills/add-favicon
 cp -a sensors-view-iframe-embed ~/.cursor/skills/sensors-view-iframe-embed
 cp -a camera-fov-analysis ~/.cursor/skills/camera-fov-analysis
+cp -a pyqt-web-win-win-package ~/.cursor/skills/pyqt-web-win-win-package
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
