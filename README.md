@@ -30,6 +30,8 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`sensors-view-iframe-embed`](sensors-view-iframe-embed/) | Host SPA embeds sensors-view via iframe (badge, locale/theme sync, ping, chrome hide) |
 | [`camera-fov-analysis`](camera-fov-analysis/) | Geometric wrist/gripper camera FOV coverage (D405-style crops, report + PNGs) |
 | [`pyqt-web-win-win-package`](pyqt-web-win-win-package/) | Windows → self-contained PyQt/PySide + WebEngine: one exe when possible, otherwise a timestamped zip (no Python/Qt/Miniconda on the target) |
+| [`win-to-ubuntu2004-package`](win-to-ubuntu2004-package/) | Windows → self-contained Ubuntu 20.04 x86_64 tar.gz (glibc 2.31, bundled CPython; no PyInstaller, WSL, or Docker) |
+| [`deepseek-share-to-md`](deepseek-share-to-md/) | Pull a DeepSeek share link via the public content API and write a focused Markdown summary |
 
 ## Install into Cursor
 
@@ -59,6 +61,8 @@ cp -a add-favicon /path/to/workspace/.cursor/skills/add-favicon
 cp -a sensors-view-iframe-embed /path/to/workspace/.cursor/skills/sensors-view-iframe-embed
 cp -a camera-fov-analysis /path/to/workspace/.cursor/skills/camera-fov-analysis
 cp -a pyqt-web-win-win-package /path/to/workspace/.cursor/skills/pyqt-web-win-win-package
+cp -a win-to-ubuntu2004-package /path/to/workspace/.cursor/skills/win-to-ubuntu2004-package
+cp -a deepseek-share-to-md /path/to/workspace/.cursor/skills/deepseek-share-to-md
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -85,6 +89,8 @@ cp -a add-favicon ~/.cursor/skills/add-favicon
 cp -a sensors-view-iframe-embed ~/.cursor/skills/sensors-view-iframe-embed
 cp -a camera-fov-analysis ~/.cursor/skills/camera-fov-analysis
 cp -a pyqt-web-win-win-package ~/.cursor/skills/pyqt-web-win-win-package
+cp -a win-to-ubuntu2004-package ~/.cursor/skills/win-to-ubuntu2004-package
+cp -a deepseek-share-to-md ~/.cursor/skills/deepseek-share-to-md
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
