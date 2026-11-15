@@ -1,0 +1,91 @@
+enabled: true
+notes: Official D435/D405 meshes in arm base (ROS Z-up meters). Seeded from CAD match;
+  tune per-camera with Arm panel sliders (same Rx(-90°) as robot). Colors differ from
+  scene overlay (#7a93ad).
+cameras:
+- id: d435_a
+  label: D435 · A
+  model: d435
+  url: /assets/realsense/d435.stl
+  units_of_file: m
+  scale: 1.0
+  color: '#e85d4c'
+  enabled: true
+  opacity: 0.72
+  offset_m:
+  - 0.6479
+  - 0.808
+  - 0.758
+  offset_rpy_deg:
+  - 116.44
+  - -149.46
+  - -89.89
+  seed_med_mm: 8.938
+  align_method: user seed + soft-overlap-volume gradient (Three.js XYZ Euler)
+  refine_med_mm: 3.171
+  refine_metrics:
+    med_mm: 3.1707831165751306
+    f2: 0.29265
+    f3: 0.46745
+    f5: 0.8585
+    f10: 0.99955
+    soft_cover: 0.7056022388274977
+    soft_cover2: 0.829791736586198
+    iou: 0.22115959354453077
+    n_in_bbox: 7322
+    med_scene_to_cam_mm: 1.7426024020991124
+  seed_metrics:
+    med_mm: 8.93750693487308
+    f2: 0.06255
+    f3: 0.09645
+    f5: 0.20095
+    f10: 0.64545
+    soft_cover: 0.2273034720788191
+    soft_cover2: 0.285815630172572
+    iou: 0.04937629937629938
+    n_in_bbox: 7162
+    med_scene_to_cam_mm: 8.537427915284894
+- id: d435_b
+  label: D435 · B
+  model: d435
+  url: /assets/realsense/d435.stl
+  units_of_file: m
+  scale: 1.0
+  color: '#f0b429'
+  enabled: true
+  opacity: 0.72
+  offset_m:
+  - 0.2293
+  - -0.2621
+  - -0.6798
+  offset_rpy_deg:
+  - -82.89
+  - 79.32
+  - -96.96
+  seed_med_mm: 2.05
+- id: d405_a
+  label: D405 · A
+  model: d405
+  url: /assets/realsense/d405.stl
+  units_of_file: mm
+  scale: 0.001
+  color: '#c084fc'
+  enabled: true
+  opacity: 0.72
+  offset_m:
+  - 0.434
+  - 0.162
+  - 0.414
+  offset_rpy_deg:
+  - -174.0
+  - -33.5
+  - 96.0
+  seed_med_mm: 11.692
+  align_method: user_manual
+  seed_metrics:
+    med_mm: 11.692389162680872
+    med_all_mm: 16.322998416809273
+    f1: 0.006696776203083632
+    f2: 0.022426413331256813
+    f3: 0.04687743342158542
+# ...

@@ -32,6 +32,7 @@ Cursor Agent Skills for report writing, Markdown ↔ DOCX / PDF / 立项 XLSX co
 | [`pyqt-web-win-win-package`](pyqt-web-win-win-package/) | Windows → self-contained PyQt/PySide + WebEngine: one exe when possible, otherwise a timestamped zip (no Python/Qt/Miniconda on the target) |
 | [`win-to-ubuntu2004-package`](win-to-ubuntu2004-package/) | Windows → self-contained Ubuntu 20.04 x86_64 tar.gz (glibc 2.31, bundled CPython; no PyInstaller, WSL, or Docker) |
 | [`deepseek-share-to-md`](deepseek-share-to-md/) | Pull a DeepSeek share link via the public content API and write a focused Markdown summary |
+| [`threejs-canvas-overlays-layers`](threejs-canvas-overlays-layers/) | Port rs-detect Three.js canvas upgrades: camera CAD overlays, ±/step nudges, Ctrl zoom-to-cursor, model layers, draw box/sphere/cylinder, visibility-ref fix |
 
 ## Install into Cursor
 
@@ -63,6 +64,7 @@ cp -a camera-fov-analysis /path/to/workspace/.cursor/skills/camera-fov-analysis
 cp -a pyqt-web-win-win-package /path/to/workspace/.cursor/skills/pyqt-web-win-win-package
 cp -a win-to-ubuntu2004-package /path/to/workspace/.cursor/skills/win-to-ubuntu2004-package
 cp -a deepseek-share-to-md /path/to/workspace/.cursor/skills/deepseek-share-to-md
+cp -a threejs-canvas-overlays-layers /path/to/workspace/.cursor/skills/threejs-canvas-overlays-layers
 
 # or user-level
 cp -a md-to-docx-report ~/.cursor/skills/md-to-docx-report
@@ -91,6 +93,7 @@ cp -a camera-fov-analysis ~/.cursor/skills/camera-fov-analysis
 cp -a pyqt-web-win-win-package ~/.cursor/skills/pyqt-web-win-win-package
 cp -a win-to-ubuntu2004-package ~/.cursor/skills/win-to-ubuntu2004-package
 cp -a deepseek-share-to-md ~/.cursor/skills/deepseek-share-to-md
+cp -a threejs-canvas-overlays-layers ~/.cursor/skills/threejs-canvas-overlays-layers
 ```
 
 Reopen the workspace or refresh Skills if they do not appear.
